@@ -245,4 +245,24 @@ Don't forget to set extra libs in _pro_ file for your app:
 
     ANDROID_EXTRA_LIBS += /opt/mobile-ffmpeg/prebuilt/android-arm/ffmpeg/lib/libavdevice.so /opt/mobile-ffmpeg/prebuilt/android-arm/ffmpeg/lib/libavformat.so /opt/mobile-ffmpeg/prebuilt/android-arm/ffmpeg/lib/libavutil.so /opt/mobile-ffmpeg/prebuilt/android-arm/ffmpeg/lib/libavcodec.so /opt/mobile-ffmpeg/prebuilt/android-arm/ffmpeg/lib/libavfilter.so /opt/mobile-ffmpeg/prebuilt/android-arm/ffmpeg/lib/libswscale.so /opt/mobile-ffmpeg/prebuilt/android-arm/ffmpeg/lib/libswresample.so
 
+# How to use
+## Logging category
 
+Some classes have more fine-grained logging category:
+- **Player backend** (which is _FFmpeg_): `qtavplayer.backend`
+- **QAVPlayer:** `qtavplayer.player`
+- **QAVVideoCodec:** `"qtavplayer.videocodec"`
+
+Then we can enable/disable logs for those by using [QLoggingCategory][qt-doc-qlogging] appropriate method:
+```cpp
+// Manage Qt logging category
+QLoggingCategory::setFilterRules(QStringLiteral(
+    "qtavplayer.backend.*=true\n"           // Enable all logging level for "backend" category
+    "qtavplayer.player.debug=false\n"       // Disable debug logging, all others are enabled
+    "qtavplayer.videocodec.debug=false\n"
+    "qtavplayer.videocodec.info=true"
+));
+```
+
+<!-- External links -->
+[qt-doc-qlogging]: https://doc.qt.io/qt-6/qloggingcategory.html

@@ -21,7 +21,7 @@
 #include "qavaudiofilter_p.h"
 #include "qavfilters_p.h"
 
-#include <QtConcurrent/qtconcurrentrun.h>
+#include <QtConcurrent/QtConcurrent>
 #include <QLoggingCategory>
 
 #include <functional>
@@ -32,7 +32,7 @@ extern "C" {
 
 QT_BEGIN_NAMESPACE
 
-Q_LOGGING_CATEGORY(lcAVPlayer, "qt.QtAVPlayer")
+Q_LOGGING_CATEGORY(lcAVPlayer, "qtavplayer.player")
 
 enum PendingMediaStatus
 {

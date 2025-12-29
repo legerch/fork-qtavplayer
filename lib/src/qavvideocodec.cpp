@@ -14,6 +14,7 @@
 #include "qavcodec_p_p.h"
 
 #include <QDebug>
+#include <QLoggingCategory>
 
 extern "C" {
 #include <libavutil/pixdesc.h>
@@ -21,6 +22,8 @@ extern "C" {
 }
 
 QT_BEGIN_NAMESPACE
+
+Q_LOGGING_CATEGORY(lcAvVideoCodec, "qtavplayer.videocodec")
 
 class QAVVideoCodecPrivate : public QAVCodecPrivate
 {
@@ -73,11 +76,11 @@ static AVPixelFormat negotiate_pixel_format(AVCodecContext *c, const AVPixelForm
     }
 
     if (!supported.isEmpty()) {
-        qDebug() << c->codec->name << ": supported hardware device contexts:";
+        qCInfo(lcAvVideoCodec) << c->codec->name << ": supported hardware device contexts:";
         for (auto a: supported)
-            qDebug() << "   " << av_hwdevice_get_type_name(a);
+            qCInfo(lcAvVideoCodec) << "   " << av_hwdevice_get_type_name(a);
     } else {
-        qWarning() << "None of the hardware accelerations are supported";
+        qCWarning(lcAvVideoCodec) << "None of the hardware accelerations are supported";
     }
 #endif
 
@@ -91,15 +94,15 @@ static AVPixelFormat negotiate_pixel_format(AVCodecContext *c, const AVPixelForm
         softwareFormats.append(f[i]);
     }
 
-    qDebug() << "Available pixel formats:";
+    qCInfo(lcAvVideoCodec) << "Available pixel formats:";
     for (auto a : softwareFormats) {
         auto dsc = av_pix_fmt_desc_get(a);
-        qDebug() << "  " << dsc->name << ": AVPixelFormat(" << a << ")";
+        qCInfo(lcAvVideoCodec) << "  sw:" << dsc->name << "(AVPixelFormat:" << a << ")";
     }
 
     for (auto a : hardwareFormats) {
         auto dsc = av_pix_fmt_desc_get(a);
-        qDebug() << "  " << dsc->name << ": AVPixelFormat(" << a << ")";
+        qCInfo(lcAvVideoCodec) << "  hw:" << dsc->name << "(AVPixelFormat:" << a << ")";
     }
 
     AVPixelFormat pf = !softwareFormats.isEmpty() ? softwareFormats[0] : AV_PIX_FMT_NONE;
@@ -117,9 +120,9 @@ static AVPixelFormat negotiate_pixel_format(AVCodecContext *c, const AVPixelForm
 
     auto dsc = av_pix_fmt_desc_get(pf);
     if (dsc)
-        qInfo() << "Using" << decStr << "decoding in" << dsc->name;
+        qCInfo(lcAvVideoCodec) << "Using" << decStr << "decoding in" << dsc->name;
     else
-        qInfo() << "None of the pixel formats";
+        qCInfo(lcAvVideoCodec) << "None of the pixel formats";
 
     return pf;
 }

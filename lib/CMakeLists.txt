@@ -84,17 +84,28 @@ if(QTAVPLAYER_WIDGET_OPENGL)
     endif()
 endif()
 
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS ${PROJECT_QT_PACKAGES} REQUIRED)
-list(TRANSFORM PROJECT_QT_PACKAGES PREPEND "Qt${QT_VERSION_MAJOR}::")
-
 ## Qt private packages
 if(QTAVPLAYER_MULTIMEDIA)
-    if(${QT_VERSION_MAJOR} EQUAL 6)
+    if(${QT_VERSION} VERSION_GREATER_EQUAL "6.10.0")
+        set(PROJECT_QT_PACKAGES ${PROJECT_QT_PACKAGES}
+            MultimediaPrivate
+        )
+
+    elseif(${QT_VERSION} VERSION_GREATER_EQUAL "6.0.0")
         set(QT_DIR_PRIV_SOURCES ${Qt6Multimedia_PRIVATE_INCLUDE_DIRS})
-    else(${QT_VERSION_MAJOR} EQUAL 5)
+
+    elseif(${QT_VERSION_MAJOR} EQUAL 5)
         set(QT_DIR_PRIV_SOURCES ${Qt5Multimedia_PRIVATE_INCLUDE_DIRS})
+
+    else()
+        message(FATAL_ERROR "Project ${PROJECT_NAME} require at least Qt5 toolchain (current: ${QT_VERSION})")
+
     endif()
 endif()
+
+## Final steps of Qt packages management
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS ${PROJECT_QT_PACKAGES} REQUIRED)
+list(TRANSFORM PROJECT_QT_PACKAGES PREPEND "Qt${QT_VERSION_MAJOR}::")
 
 ## Other library packages
 ### Example: find_package(nlohmann_json 3.11.3 REQUIRED)

@@ -1,6 +1,7 @@
 MIT License
 
-Copyright (c) 2020 Val Doroshchuk
+Copyright (c) 2020-2025 Val Doroshchuk
+Copyright (c) 2025 Leger Charlie
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
